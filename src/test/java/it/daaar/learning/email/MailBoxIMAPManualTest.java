@@ -28,7 +28,7 @@ class MailBoxIMAPManualTest {
             System.out.println("subject: " + message.getSubject());
             System.out.println("from: " + stream(message.getFrom()).map(Address::toString).collect(toList()));
             System.out.println("sent date: " + message.getSentDate());
-            // System.out.println("content: " + contentFrom(message));
+//             System.out.println("content: " + contentFrom(message));
         }
 
 //        messages.get(0).setFlag(DELETED, true);
