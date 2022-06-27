@@ -10,19 +10,16 @@ import static javax.mail.Session.getInstance;
 
 public class MailBoxIMAP implements MailBox {
 
-    private Store store;
+    private final Store store;
 
-    @Override
-    public void connect(String url, String username, String password) {
+    public MailBoxIMAP() {
+        Properties properties = getProperties();
+        Session session = getInstance(properties);
+
         try {
-
-            Properties properties = getProperties();
-            Session session = getInstance(properties);
-            this.store = session.getStore("imap");
-            this.store.connect(url, username, password);
-
-        } catch (MessagingException e) {
-            throw new MailBoxException("Error connecting to the email box.", e);
+            store = session.getStore("imap");
+        } catch (NoSuchProviderException e) {
+            throw new MailBoxException("Error getting imap store", e);
         }
     }
 
@@ -32,6 +29,15 @@ public class MailBoxIMAP implements MailBox {
         properties.put("mail.imap.ssl.trust", "*");
         properties.setProperty("mail.imap.ssl.enable", "true");
         return properties;
+    }
+
+    @Override
+    public void connect(String url, String username, String password) {
+        try {
+            store.connect(url, username, password);
+        } catch (MessagingException e) {
+            throw new MailBoxException("Error connecting to the email box.", e);
+        }
     }
 
     @Override
